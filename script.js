@@ -22,14 +22,7 @@ function GameBoard () {
         }
     }
 
-    // printing board
-    const print = () => {
-        for (let i = 0 ; i < 3 ; i++)
-        {
-            console.log(`${board[i][0]} | ${board[i][1]} | ${board[i][2]}`);
-        }
-    };
-
+    
     // place marker
     const placeMarkerAt = (row, column, activePlayer) => {
         const value = board[row][column];
@@ -60,7 +53,7 @@ function GameBoard () {
     // check status
     const gameStatus = (activePlayer) => {
         let marker = activePlayer.marker;
-
+        
         const rowCheck = (() => {
             win = false;
             for (let i = 0 ; i < 3 ; i++)
@@ -68,7 +61,7 @@ function GameBoard () {
                 let val0 = board[i][0];
                 let val1 = board[i][1];
                 let val2 = board[i][2];
-
+                
                 if (marker === val0 && marker === val1 && marker == val2)
                 {
                     win = true;
@@ -77,7 +70,7 @@ function GameBoard () {
             }
             return win;
         })();
-
+        
         const colCheck = (() => {
             win = false;
             for (let i = 0 ; i < 3 ; i++)
@@ -85,7 +78,7 @@ function GameBoard () {
                 let val0 = board[0][i];
                 let val1 = board[1][i];
                 let val2 = board[2][i];
-
+                
                 if (marker === val0 && marker === val1 && marker == val2)
                 {
                     win = true;
@@ -94,21 +87,21 @@ function GameBoard () {
             }
             return win;
         })();
-
+        
         const diagCheck = (() => {
             // equal index check
             win1 = board[0][0] === marker && board[1][1] === marker && board[2][2] === marker;
 
             // index addition = 2 check
             win2 = board[0][2] === marker && board[1][1] === marker && board[2][0] === marker;
-
+            
             return win1 || win2;
         })();
         
         // checks if board is filled
         const filled = (() => {
             let fill = true;
-
+            
             for (let i = 0 ; i < 3 ; i++)
             {
                 for (let j = 0 ; j < 3 ; j++)
@@ -131,19 +124,27 @@ function GameBoard () {
         {
             status = "tie";
         }
-
+        
         return status;
     }
+    
+    // printing board
+    // const print = () => {
+    //     for (let i = 0 ; i < 3 ; i++)
+    //     {
+    //         console.log(`${board[i][0]} | ${board[i][1]} | ${board[i][2]}`);
+    //     }
+    // };
 
-    return {print, placeMarkerAt, gameStatus, reset};
+    return {placeMarkerAt, gameStatus, reset, /*print*/};
 }
 
 function GameController () {
-
+    
     let p1name = "Player 1";
     let p2name = "Player 2";
     let GAME_STATE = true;
-
+    
     const players = [
         {
             name: p1name,
@@ -168,23 +169,23 @@ function GameController () {
         }
     };
 
-
     let board = GameBoard();
+
     // starting a new game
     const newGame = () => {
         board.reset();
         activePlayer = players[0];
         GAME_STATE = true;
-        console.log("Welcome to Tic Tac Toe!");
-        board.print();
-        console.log(`${activePlayer.name}'s turn`);
+        // console.log("Welcome to Tic Tac Toe!");
+        // board.print();
+        // console.log(`${activePlayer.name}'s turn`);
     };
 
     // place markers using playRound
     const playRound = (r, c) => {
         if (!GAME_STATE)
         {
-            console.log(`Please start a new game`);
+            // console.log(`Please start a new game`);
             return -1;
         }
 
@@ -209,25 +210,25 @@ function GameController () {
     //
     const nextRound = () => {
         switchActivePlayer();
-        board.print();
-        console.log(`${activePlayer.name}'s turn`);
+        // board.print();
+        // console.log(`${activePlayer.name}'s turn`);
     };
 
     //
     const endGame = (status="aborted") => {
-        board.print();
-        if (status === "won")
-        {
-            console.log(`${activePlayer.name} won!`);
-        }
-        else if (status === "tie")
-        {
-            console.log(`Tie!`);
-        }
-        else if (status === "aborted")
-        {
-            console.log(`Game Aborted.`);
-        }
+        // // board.print();
+        // if (status === "won")
+        // {
+        //     console.log(`${activePlayer.name} won!`);
+        // }
+        // else if (status === "tie")
+        // {
+        //     console.log(`Tie!`);
+        // }
+        // else if (status === "aborted")
+        // {
+        //     console.log(`Game Aborted.`);
+        // }
         GAME_STATE = false;
         return status;
     };
@@ -237,7 +238,7 @@ function GameController () {
         GAME_STATE = true;
         board.reset();
         activePlayer = players[0];
-        console.log(`Restarting...`);
+        // console.log(`Restarting...`);
         newGame();
     };
 
@@ -255,7 +256,6 @@ function GameController () {
     }
 }
 
-
 function DOMcontroller () {
     
     // Generates 3x3 grid of tic tac toe
@@ -269,7 +269,7 @@ function DOMcontroller () {
                 btn.classList.add(`ttt-box-${i}${j}`);
                 btn.classList.add(`ttt-box`);
                 
-                btn.addEventListener('click', () => {processtttDOM(i, j);});
+                btn.addEventListener('click', () => {playMarker(i, j);});
 
                 appendTo.append(btn);
             } 
@@ -277,7 +277,7 @@ function DOMcontroller () {
     })(ttt_grid);
     
     // Adding markers to tic tac toe board
-    const processtttDOM = (row, col) => {
+    const playMarker = (row, col) => {
         let activePlayer = game.getActivePlayer();
         
         let validRound = game.playRound(row, col);
