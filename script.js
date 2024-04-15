@@ -21,7 +21,6 @@ function GameBoard () {
             board[i][j] = '*';
         }
     }
-
     
     // place marker
     const placeMarkerAt = (row, column, activePlayer) => {
@@ -34,7 +33,7 @@ function GameBoard () {
         }
         else 
         {
-            console.log("Invalid location, try again");
+            // console.log("Invalid location, try again");
             return false;
         }
     };
