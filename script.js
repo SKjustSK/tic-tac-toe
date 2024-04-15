@@ -1,18 +1,14 @@
-/*
+const game = GameController();
+const gameDOM = DOMcontroller();
+game.newGame();
 
-GameController -> 
-                play round -> let the active player place a marking???
-                switch active player -> switches the active player
-                game status -> will tell if the game has been won/lost/tied/in process 
+// Restart button
+const restart = document.querySelector(".restart-game");
+restart.addEventListener('click', () => {
+    game.restart();
+    gameDOM.reset();
+});
 
-                player objects -> player one and two
-                name, marker
-
-GameBoard -> start game -> generate a board
-            place marker at -> places marker of active player at given location
-            print board -> will display board
-
-*/
 
 function GameBoard () {
     // Creating 3x3 board
@@ -176,6 +172,8 @@ function GameController () {
     let board = GameBoard();
     // starting a new game
     const newGame = () => {
+        board.reset();
+        activePlayer = players[0];
         GAME_STATE = true;
         console.log("Welcome to Tic Tac Toe!");
         board.print();
@@ -187,14 +185,14 @@ function GameController () {
         if (!GAME_STATE)
         {
             console.log(`Please start a new game`);
-            return;
+            return -1;
         }
 
-        validMark = false;
-        do {
-            validMark = board.placeMarkerAt(r, c, activePlayer);
+        let validMarker = board.placeMarkerAt(r, c, activePlayer);
+        if (!validMarker)
+        {
+            return -1;
         }
-        while (!validMark)
 
         let gameState = board.gameStatus(activePlayer);
         if (gameState === "ongoing")
@@ -205,6 +203,7 @@ function GameController () {
         {
             endGame(gameState);
         }
+        return 1;
     };
 
     //
@@ -215,7 +214,7 @@ function GameController () {
     };
 
     //
-    const endGame = (status) => {
+    const endGame = (status="aborted") => {
         board.print();
         if (status === "won")
         {
@@ -225,9 +224,12 @@ function GameController () {
         {
             console.log(`Tie!`);
         }
+        else if (status === "aborted")
+        {
+            console.log(`Game Aborted.`);
+        }
         GAME_STATE = false;
-        board.reset();
-        activePlayer = players[0];
+        return status;
     };
 
     //
@@ -239,12 +241,100 @@ function GameController () {
         newGame();
     };
 
+    //
+    const getActivePlayer = () => {
+        return activePlayer;
+    }
+
     return {
         newGame,
         restart,
         playRound,
+        getActivePlayer,
+        gameStatus: board.gameStatus,
     }
 }
 
 
-const game = GameController();
+function DOMcontroller () {
+    
+    // Generates 3x3 grid of tic tac toe
+    const ttt_grid = document.querySelector('.ttt-grid');
+    const gen3x3ttt = ((appendTo) => {
+        for (let i = 0 ; i < 3 ; i++)
+        {
+            for (let j = 0 ; j < 3 ; j++)
+            {
+                let btn = document.createElement('button');
+                btn.classList.add(`ttt-box-${i}${j}`);
+                btn.classList.add(`ttt-box`);
+                
+                btn.addEventListener('click', () => {processtttDOM(i, j);});
+
+                appendTo.append(btn);
+            } 
+        }
+    })(ttt_grid);
+    
+    // Adding markers to tic tac toe board
+    const processtttDOM = (row, col) => {
+        let activePlayer = game.getActivePlayer();
+        
+        let validRound = game.playRound(row, col);
+        updateGameStatus();
+        if (validRound == -1)
+        {
+            return -1;
+        }
+
+        let ttt_box = document.querySelector(`.ttt-box-${row}${col}`);
+        if (activePlayer.marker === "X")
+        {
+            ttt_box.classList.add(`x_marker`);
+        }
+        else if (activePlayer.marker === "O")
+        {
+            ttt_box.classList.add(`o_marker`);
+        }
+    };
+
+    const updateGameStatus = () => {
+        let game_status_text = document.querySelector('.game-status-text');
+        
+        let game_status = game.gameStatus(game.getActivePlayer());
+        if (game_status === "ongoing")
+        {
+            game_status_text.textContent = `${game.getActivePlayer().name}'s Turn`;
+        }
+        else if (game_status === "won")
+        {
+            game_status_text.textContent = `${game.getActivePlayer().name} won!`;
+        }
+        else if (game_status === "tie")
+        {
+            game_status_text.textContent = `Tie!`;
+        }
+    };
+
+    const reset = () => {
+        // board DOM reset
+        for (let i = 0 ; i < 3 ; i++)
+        {
+            for (let j = 0 ; j < 3 ; j++)
+            {
+                let btn = document.querySelector(`.ttt-box-${i}${j}`);
+                btn.classList.remove(`x_marker`);
+                btn.classList.remove(`o_marker`);
+            } 
+        }
+
+        // Game status DOM reset
+        let game_status_text = document.querySelector('.game-status-text');
+        game_status_text.textContent = `${(game.getActivePlayer()).name}'s Turn`;
+    };
+
+    return {
+        reset,
+    };
+}
+

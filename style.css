@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    background-color: #EAECCC;
+    font-family: 'Mukta', 'Arial';
+    display: flex;
+}
+
+/**/
+.ttt-wrapper {
+    flex: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}
+
+.ttt-grid {
+    height: 500px;
+    width: 500px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.ttt-box {
+    background: 0;
+	border: solid #c8816b 3px;
+	padding: 0;
+	cursor: pointer;
+}
+
+.ttt-grid .ttt-box-00,
+.ttt-grid .ttt-box-01,
+.ttt-grid .ttt-box-02 {
+    border-top: 0px;
+}
+
+.ttt-grid .ttt-box-20,
+.ttt-grid .ttt-box-21,
+.ttt-grid .ttt-box-22 {
+    border-bottom: 0px;
+}
+
+.ttt-grid .ttt-box-00,
+.ttt-grid .ttt-box-10,
+.ttt-grid .ttt-box-20 {
+    border-left: 0px;
+}
+
+.ttt-grid .ttt-box-02,
+.ttt-grid .ttt-box-12,
+.ttt-grid .ttt-box-22 {
+    border-right: 0px;
+}
+
+.ttt-grid .x_marker {
+    background-image: url(x_marker.png);
+    background-size: cover;
+}
+
+.ttt-grid .o_marker {
+    background-image: url(o_marker.png);
+    background-size: cover;
+}
+
+/**/
+.game-flow {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    padding-right: 100px; 
+}
+
+.welcome-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-text {
+    padding-top: 25px;
+    font-size: 43px;
+    letter-spacing: 0.1px;
+    color: #bc5232;
+    font-weight: 500;
+}
+
+
+.game-status {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.game-status-text {
+    font-size: 37px;
+    letter-spacing: 0.3px;
+    color: #ce2b59;
+    font-weight: 400;
+}   
+
+.restart-game-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 50px;
+}
+
+.restart-game {
+    color: #6ca18c;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    height: 50px;
+    width: 170px;
+    border-radius: 20px;
+    background: #caf9e7;
+    outline: 0;
+    border: solid #6e9b80 2px;
+    box-shadow: 0 10px 0 0 #93dec6;
+}
+
+.restart-game:active {
+    transition: 0.05s;
+    transform: scale(0.9);
+}
+
+.restart-game:hover {
+    background: #c3f5e2;
+}
+
+
